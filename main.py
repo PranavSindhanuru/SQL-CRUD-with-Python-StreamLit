@@ -19,9 +19,6 @@ mycursor = db.cursor()
 # mycursor.execute("CREATE TABLE room (Room_id int, Room_number int, Room_type_Id int, Room_price int, Room_status int)")
 # mycursor.execute("CREATE TABLE payment (Payment_id int, Guest_id int, Reservation_id int, Add_On varchar(50), Room_price int, Number_of_nights int, Total int, Payment_status int)")
 
-# mycursor.execute("SHOW TABLES")
-# for x in mycursor:
-#   print(x)
 mycursor.execute("SELECT * FROM guest")
 guest = pd.DataFrame(mycursor.fetchall(), columns=['Guest ID', 'First Name', 'Last Name', 'Address', 'Phone number', 'Email'])
 
@@ -60,12 +57,12 @@ with st.form(key='datainput'):
     reservation_status = st.number_input('Reservation Status', step=1, min_value=0, max_value=1)
     booking_id = st.number_input('Booking ID', step=1, min_value=0)
     room_id = st.number_input('Room ID', step=1, min_value=0)
-    room_type_ = st.text_input('Room Type')
+    room_type_ = st.selectbox('Room Type', ['MINI', 'SMALL', 'REGULAR', 'BIG', 'LARGE'])
     room_number = st.number_input('Room Number', step=1, min_value=0)
     room_price = st.number_input('Room Price', step=1, min_value=0)
     room_status = st.number_input('Room Status', step=1, min_value=0, max_value=1)
     payment_id = st.number_input('Payment ID', step=1, min_value=0)
-    add_on = st.text_input('Add on extra features')
+    add_on = st.selectbox('Add on Extra Features', ['NONE', 'Pool', 'Spa', 'Guide', 'Cab'])
     number_of_nights = st.number_input('Number of Nights', step=1, min_value=0)
     total = st.number_input('Total', step=1, min_value=0)
     payment_status = st.number_input('Payment Status', step=1, min_value=0, max_value=1)
@@ -73,7 +70,7 @@ with st.form(key='datainput'):
 
 if submit_button:
     with st.spinner('Running ....'):
-        if guest_id != 0 and guest_id not in guest['Guest ID']:
+        if guest_id != 0:
             mycursor.execute("INSERT INTO guest VALUES (%s, %s, %s, %s, %s, %s)", (guest_id, first_name, last_name, address, ph_no, email))
         if reservation_id != 0:
             mycursor.execute("INSERT INTO reservation VALUES (%s, %s, %s, %s, %s, %s);", (reservation_id, guest_id, room_type_id, check_in, check_out, reservation_status))
